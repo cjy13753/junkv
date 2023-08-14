@@ -1,15 +1,27 @@
 use std::{
-    fs::{self, OpenOptions},
-    io::Write,
+    fs::{self, File, OpenOptions},
+    io::{Read, Write},
     path::Path,
 };
 
 fn main() {
-    write("Name", "123456")
+    let path = Path::new("data/data.txt");
+    write(path, "Name", "123456");
+    read(path);
 }
 
-fn write(key: &str, value: &str) {
-    let path = Path::new("data/data.txt");
+fn read(path: &Path) {
+    let mut content = String::new();
+    File::open(path)
+        .unwrap()
+        .read_to_string(&mut content)
+        .unwrap();
+    for kv in content.split(',') {
+        println!("{}", kv);
+    }
+}
+
+fn write(path: &Path, key: &str, value: &str) {
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
